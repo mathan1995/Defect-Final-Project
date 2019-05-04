@@ -1,20 +1,23 @@
 import React, { Component } from "react";
 import axios from "axios";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-
+import Spinner from "react-bootstrap/Spinner";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
+import Table from "react-bootstrap/Table";
 
 class ListProject extends Component {
   constructor(props) {
     super(props);
     this.state = { projects: [] };
+    // this.state = { projectId: "", projectName: "", projectMembers: "" };
     this.routeAddProject = this.routeAddProject.bind(this);
     this.refreshProject = this.refreshProject.bind(this);
     this.handleShowModel = this.handleShowModel.bind(this);
     this.handleCloseModel = this.handleCloseModel.bind(this);
+    this.deleteProject = this.deleteProject.bind(this);
   }
 
   //Route ADD Project
@@ -54,6 +57,18 @@ class ListProject extends Component {
     });
   }
 
+  //DELETE-METHOD 1 = WORKING
+  deleteProject(id) {
+    axios
+      .delete("http://localhost:8080/Defect/deleteProject/" + id)
+      .then(response => {
+        console.warn("Delete Service is working");
+        this.refreshProject(response);
+
+        alert(" Book deleted successfully");
+      });
+  }
+
   render() {
     return (
       <div className="col-sm-12">
@@ -67,14 +82,15 @@ class ListProject extends Component {
             <i className="fa fa-plus">Help</i>
           </button> */}
           <br />
-          <Button variant="primary" onClick={this.handleShowModel}>
+          <Button variant="success" onClick={this.handleShowModel}>
             <i className="fa fa-plus">Add</i>
           </Button>
           <br /> <br />
-          <table className="table">
+          <span id="alert" />
+          <Table striped bordered hover>
             <thead>
               <tr>
-                <th>PROJECT-ID</th>
+                <th>#</th>
                 <th>PROJECT-NAME</th>
                 <th>PROJECT-MEMBERS</th>
                 <th> &nbsp; &nbsp; &nbsp; &nbsp;ACTION</th>
@@ -105,7 +121,7 @@ class ListProject extends Component {
                       onClick={() =>
                         window.confirm(
                           "Are you sure you wish to delete this Book? "
-                        ) && this.deleteBook(project.projectId)
+                        ) && this.deleteProject(project.projectId)
                       }
                     >
                       <i className="fa fa-trash"> Delete</i>
@@ -114,7 +130,7 @@ class ListProject extends Component {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </Table>
         </div>
 
         {/* ReactBootstrap Model */}
@@ -128,30 +144,26 @@ class ListProject extends Component {
           }}
         >
           <Modal.Header closeButton>
-            <Modal.Title>Add Project</Modal.Title>
+            <Modal.Title>
+              <Spinner animation="border" variant="success" />
+              {/* <Spinner animation="grow" variant="success" /> */}
+              &nbsp; &nbsp; Add Project Here #
+            </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form>
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridEmail">
-                  <Form.Label>Email</Form.Label>
-                  <Form.Control type="email" placeholder="Enter email" />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridPassword">
-                  <Form.Label>Password</Form.Label>
-                  <Form.Control type="password" placeholder="Password" />
-                </Form.Group>
-              </Form.Row>
-
               <Form.Group controlId="formGridAddress1">
-                <Form.Label>Address</Form.Label>
-                <Form.Control placeholder="1234 Main St" />
+                <Form.Label>Project ID</Form.Label>
+                <Form.Control placeholder="#P15856" disabled />
+              </Form.Group>
+              <Form.Group controlId="formGridAddress1">
+                <Form.Label>Project Name</Form.Label>
+                <Form.Control placeholder="Please enter the project name" />
               </Form.Group>
 
               <Form.Group controlId="formGridAddress2">
-                <Form.Label>Address 2</Form.Label>
-                <Form.Control placeholder="Apartment, studio, or floor" />
+                <Form.Label>Project Members</Form.Label>
+                <Form.Control placeholder="Please Enter Project Members" />
               </Form.Group>
 
               <Form.Row>
@@ -164,7 +176,11 @@ class ListProject extends Component {
                   <Form.Label>State</Form.Label>
                   <Form.Control as="select">
                     <option>Choose...</option>
-                    <option>...</option>
+                    <option>Test Data</option>
+                    <option>Test Data</option>
+                    <option>Test Data</option>
+                    <option>Test Data</option>
+                    <option>Test Data</option>
                   </Form.Control>
                 </Form.Group>
 

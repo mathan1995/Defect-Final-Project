@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { AutoRotatingCarousel } from "material-auto-rotating-carousel";
+// import { AutoRotatingCarousel } from "material-auto-rotating-carousel";
 
 class Help extends Component {
   constructor(props) {

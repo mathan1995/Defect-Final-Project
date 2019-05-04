@@ -23,6 +23,11 @@ class BottomNav extends React.Component {
     this.setState({ value });
   };
 
+  routeTest() {
+    let path = `/test`;
+    this.props.history.push(path);
+  }
+
   render() {
     const { classes } = this.props;
     const { value } = this.state;
@@ -34,7 +39,11 @@ class BottomNav extends React.Component {
         showLabels
         className={classes.root}
       >
-        <BottomNavigationAction label="Recents" icon={<Home />} />
+        <BottomNavigationAction
+          onChange={this.routeTest.bind(this)}
+          label="Recents"
+          icon={<Home />}
+        />
         <BottomNavigationAction label="Favorites" icon={<Assignment />} />
         <BottomNavigationAction label="Nearby" icon={<LocationOnIcon />} />
         <BottomNavigationAction label="Test" icon={<RestoreIcon />} />
