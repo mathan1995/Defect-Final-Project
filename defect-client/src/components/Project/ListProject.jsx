@@ -173,7 +173,7 @@ class ListProject extends Component {
                 </Form.Group>
 
                 <Form.Group as={Col} controlId="formGridState">
-                  <Form.Label>State</Form.Label>
+                  <Form.Label>Project Port</Form.Label>
                   <Form.Control as="select">
                     <option>Choose...</option>
                     <option>Test Data</option>
