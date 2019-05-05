@@ -12,7 +12,7 @@ function App() {
     <div className="App">
       <Header />
       {/* <TextFields /> */}
-      <TestIndex />
+      {/* <TestIndex /> */}
       <ProjectIndex />
     </div>
   );

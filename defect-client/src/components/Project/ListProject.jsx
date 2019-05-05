@@ -7,22 +7,28 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Table from "react-bootstrap/Table";
+import ProjectDataService from "../Services/ProjectDataService";
 
 class ListProject extends Component {
   constructor(props) {
     super(props);
-    this.state = { projects: [] };
-    // this.state = { projectId: "", projectName: "", projectMembers: "" };
+    this.state = {
+      projects: [],
+      projectId: this.props.match.params.id,
+      projectName: "",
+      projectMembers: ""
+    };
+
     this.routeAddProject = this.routeAddProject.bind(this);
     this.refreshProject = this.refreshProject.bind(this);
     this.handleShowModel = this.handleShowModel.bind(this);
     this.handleCloseModel = this.handleCloseModel.bind(this);
-    this.deleteProject = this.deleteProject.bind(this);
+    this.deleteProjectClicked = this.deleteProjectClicked.bind(this);
   }
 
   //Route ADD Project
   routeAddProject() {
-    let path = `/Help`;
+    let path = `/add`;
     this.props.history.push(path);
   }
 
@@ -31,42 +37,33 @@ class ListProject extends Component {
   }
 
   componentDidMount() {
-    axios.get("http://localhost:8080/Defect/findAllProject").then(response => {
-      this.setState({ projects: response.data });
-      //console.table(response.data);
-      console.warn("Project Service is working");
-    });
-
     // CALLING REFRESH PROJECT METHOD
     this.refreshProject();
   }
-
+  //ADD or EDIT MODEL CLOSE
   handleCloseModel() {
     this.setState({ show: false });
   }
-
+  //ADD or EDIT MODEL SHOW
   handleShowModel() {
     this.setState({ show: true });
   }
 
   //REFRESH PROJECT METHOD
   refreshProject() {
-    axios.get("http://localhost:8080/Defect/findAllProject").then(response => {
+    ProjectDataService.retrieveAllProjects().then(response => {
       console.warn("Refresh Service is working");
       this.setState({ projects: response.data });
     });
   }
 
   //DELETE-METHOD 1 = WORKING
-  deleteProject(id) {
-    axios
-      .delete("http://localhost:8080/Defect/deleteProject/" + id)
-      .then(response => {
-        console.warn("Delete Service is working");
-        this.refreshProject(response);
-
-        alert(" Book deleted successfully");
-      });
+  deleteProjectClicked(id) {
+    ProjectDataService.deleteProject(id).then(response => {
+      console.warn("Delete Service is working");
+      this.refreshProject();
+      alert(" Book deleted successfully");
+    });
   }
 
   render() {
@@ -82,6 +79,11 @@ class ListProject extends Component {
             <i className="fa fa-plus">Help</i>
           </button> */}
           <br />
+          <Button varient="primary" onClick={this.routeAddProject}>
+            {" "}
+            <i className="fa fa-plus">Hello</i>
+          </Button>
+          &nbsp;
           <Button variant="success" onClick={this.handleShowModel}>
             <i className="fa fa-plus">Add</i>
           </Button>
@@ -121,7 +123,7 @@ class ListProject extends Component {
                       onClick={() =>
                         window.confirm(
                           "Are you sure you wish to delete this Book? "
-                        ) && this.deleteProject(project.projectId)
+                        ) && this.deleteProjectClicked(project.projectId)
                       }
                     >
                       <i className="fa fa-trash"> Delete</i>
@@ -139,9 +141,9 @@ class ListProject extends Component {
           show={this.state.show}
           onHide={this.handleCloseModel}
           size="lg"
-          style={{
-            background: "linear-gradient(to right bottom, #5C258D, #4389A2)"
-          }}
+          // style={{
+          //   background: "linear-gradient(to right bottom, #5C258D, #4389A2)"
+          // }}
         >
           <Modal.Header closeButton>
             <Modal.Title>
